@@ -1,0 +1,67 @@
+CREATE TABLE `mca2024riya`.`p` (`pno` CHAR(3) NOT NULL , `pname` VARCHAR(20) NOT NULL , `color` VARCHAR(20) NOT NULL , `weight` FLOAT(5.2) NOT NULL , `p_city` VARCHAR(25) NOT NULL , PRIMARY KEY (`pno`)) ENGINE = InnoDB;
+CREATE TABLE `mca2024riya`.`sp` (`sno` CHAR(3) NOT NULL , `pno` CHAR(3) NOT NULL , `qty` INT NOT NULL ) ENGINE = InnoDB;
+INSERT INTO `s` (`sno`, `sname`, `s_status`, `s_city`) VALUES ('S1', 'Riya', '20', 'Bhuj');
+
+SELECT `pname` FROM `p` WHERE p_city="Londan";
+SELECT pname FROM p WHERE weight=(SELECT MAX(weight) FROM p);
+SELECT `pno`, `pname` FROM `p` WHERE color="Red";
+SELECT DISTINCT s.sname,s.s_city FROM s,sp WHERE s.sno=sp.sno AND sp.qty>200;
+
+SELECT MAX(weight) FROM p WHERE weight<(SELECT MAX(weight) FROM p);
+or
+SELECT pname,weight FROM p ORDER BY weight DESC LIMIT 1 OFFSET 1;
+
+SELECT s.sno,sp.qty
+	FROM s,sp,p
+    WHERE s.sno=sp.sno
+    AND p.pno=sp.pno
+    AND p.weight=(SELECT MAX(weight) FROM p);
+SELECT s.sname,sp.qty 
+	FROM s,sp,p
+    WHERE s.sno=sp.sno
+    AND p.pno=sp.pno
+    AND p.color="red";
+SELECT s.sname,p.p_city,sp.qty
+	FROM s,sp,p
+    WHERE s.sno=sp.sno
+    AND p.pno=sp.pno
+    AND s.s_status<30;
+SELECT s.sname,SUM(sp.qty) AS Total_Qty
+	FROM s,sp
+    WHERE s.sno=sp.sno
+    GROUP BY s.sname
+SELECT p.pname,SUM(sp.qty) AS Total_Qty
+	FROM s,sp,p
+    WHERE s.sno=sp.sno
+    AND p.pno=sp.pno
+    GROUP BY p.pname
+
+
+
+SELECT p.pname, SUM(sp.qty) AS Total_Qty
+	FROM p,sp
+    WHERE p.pno=sp.pno
+    GROUP BY p.pname
+SELECT s.sname,SUM(sp.qty) AS Total_Qty
+	FROM s,sp
+    WHERE s.sno=sp.sno
+    AND s.sno<'s4' 
+    GROUP BY s.sno
+
+SELECT s.sname,SUM(sp.qty)  AS Total_Qty 
+	FROM s,sp
+     WHERE s.sno=sp.sno
+     AND s.s_status=20
+     GROUP BY s.sname
+CREATE TABLE `mca2024riya`. (`sno` CHAR(3) NOT NULL , `pno` CHAR(3) NOT NULL , `qty` INT NOT NULL ) ENGINE = InnoDB;
+INSERT INTO `sp` (`sno`, `pno`, `qty`) VALUES ('S1', 'P1', '300'), ('S1', 'P2', '200'), ('S1', 'P3', '400'), ('S1', 'P4', '200'), ('S1', 'P5', '300'), ('S1', 'P6', '200');
+INSERT INTO `sp` (`sno`, `pno`, `qty`) VALUES ('S4', 'P2', '100'), ('S4', 'P4', '300'), ('S4', 'P5', '400');
+SELECT DISTINCT s.sname,s.s_city FROM `s` s JOIN sp p ON s.sno=p.sno WHERE p.qty>200;
+
+
+
+CREATE TABLE `mca2024riya`.`dept` (`dept_id` INT NOT NULL , `dept_name` VARCHAR(30) NOT NULL , `dept_location` VARCHAR(50) NOT NULL , PRIMARY KEY (`dept_id`)) ENGINE = InnoDB;
+CREATE TABLE `mca2024riya`.`emp` (`emp_id` INT NOT NULL , `emp_name` VARCHAR(35) NOT NULL , `emp_dept_id` INT NOT NULL , `emp_boss_id` INT NOT NULL , `emp_salary` BIGINT NOT NULL , PRIMARY KEY (`emp_id`)) ENGINE = InnoDB;
+ALTER TABLE `emp` ADD FOREIGN KEY (`emp_dept_id`) REFERENCES `dept`(`dept_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+INSERT INTO `dept` (`dept_id`, `dept_name`, `dept_location`) VALUES ('1', 'computer', 'ahmedabad'), ('2', 'microbiology', 'sadra'), ('3', 'management', 'randheja'), ('4', 'main office', 'ahmedabad')
+INSERT INTO `emp` (`emp_id`, `emp_name`, `emp_dept_id`, `emp_boss_id`, `emp_salary`) VALUES ('201', 'archna', '2', '201', '200000'), ('202', 'tanvi', '2', '201', '135000'), ('203', 'dharti', '2', '201', '175000'), ('301', 'hemali', '3', '301', '235000'), ('302', 'vishal', '3', '301', '180000'), ('303', 'nafis', '3', '302', '199000'), ('401', 'namrata', '4', '401', '500000'), ('402', 'bipin', '4', '401', '490000'), ('403', 'narendra', '4', '402', '1000000'), ('404', 'mohan', '4', '402', '800000')
